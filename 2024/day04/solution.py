@@ -51,41 +51,16 @@ def part2(matrix) -> int:
     cols = len(matrix[0])
 
     def in_bounds(x, y):
-        return 0 <= x < rows and 0 <= y < cols
-
-    right_diag = [(-1, 1), (1, -1)]
-    left_diag = [(-1, -1), (1, 1)]
+        return 0 <= x < rows - 1 and 0 <= y < cols - 1
 
     for row in range(rows):
         for col in range(cols):
-            if matrix[row][col] == "A":
-                match = True
-                search_chars = set(["M", "S"])
-                for dir in right_diag:
-                    nrow = row + dir[0]
-                    ncol = col + dir[1]
-                    if not in_bounds(nrow, ncol):
-                        match = False
-                        break
-                    elif matrix[nrow][ncol] not in search_chars:
-                        match = False
-                        break
-                    else:
-                        search_chars.remove(matrix[nrow][ncol])
-                search_chars = set(["M", "S"])
-                for dir in left_diag:
-                    nrow = row + dir[0]
-                    ncol = col + dir[1]
-                    if not in_bounds(nrow, ncol):
-                        match = False
-                        break
-                    elif matrix[nrow][ncol] not in search_chars:
-                        match = False
-                        break
-                    else:
-                        search_chars.remove(matrix[nrow][ncol])
-                if match:
-                    count += 1
+            if matrix[row][col] != "A" or not in_bounds(row, col):
+                continue
+            right_diag_s = matrix[row + 1][col - 1] + matrix[row - 1][col + 1]
+            left_diag_s = matrix[row - 1][col - 1] + matrix[row + 1][col + 1]
+            if right_diag_s in ["MS", "SM"] and left_diag_s in ["MS", "SM"]:
+                count += 1
     return count
 
 
